@@ -1,12 +1,12 @@
 const express = require('express');
-
+// 解压缩
 const { unzip } = require("zlib")
 // 跨域代理
 const { createProxyMiddleware } = require('http-proxy-middleware')
 // 转码插件
 const iconv = require('iconv-lite')
-var router = express.Router();
 
+var router = express.Router();
 // 请求 qq 昵称接口 浏览器访问:http://localhost:3000/api/out/qqinfo?uins=1278820830
 router.get('/qqinfo', createProxyMiddleware({
   changeOrigin: true,
@@ -32,29 +32,30 @@ router.get('/qqinfo', createProxyMiddleware({
     proxyReq.setHeader('sec-fetch-user', '?1');
     proxyReq.setHeader('sec-fetch-dest', 'document');
     proxyReq.setHeader('Upgrade-Insecure-Requests', '1');
-
-    // 换host,避免跨域
     proxyReq.setHeader('Host', 'r.qzone.qq.com');
   },
   onProxyRes(proxyRes, req, res) {
     let arr = [];
+
     proxyRes.on('data', (chunk) => {
       arr.push(chunk)
     })
+
     proxyRes.on('end', () => {
       arr = Buffer.concat(arr)
-      /* 由于qq空间开启了gzip,这里需要先解压缩 */
+      /* 当找不到QQ号时返回的错误信息为utf-8编码,不需要进行转码 */
       if (/error/.test(arr.toString())) {
         res.json({
           errno: 404,
           msg: "not found"
         })
       } else {
+        /* 由于qq空间开启了gzip,这里需要先解压缩 */
         unzip(arr, (err, buffer) => {
           if (err) {
             console.log(err)
           }
-          /* QQ空间接口返回GBK编码数据,这里需要进行转码 */
+          /* 返回GBK编码数据,这里需要进行转码 */
           let str = iconv.decode(buffer, 'GBK')
           console.log(str)
           let reg = /.*(http.*)".*,"(.*)"/
