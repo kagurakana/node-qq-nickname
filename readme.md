@@ -1,3 +1,5 @@
+# nodeQQ昵称api
+
 ### 描述
 
 个人博客需要添加一个填写QQ号获取**昵称**和头像的api,故添加一个node搭建的接口,期间遇到了不少坑.
@@ -63,9 +65,11 @@ https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1278820830
 ```
 
 
->**目前有两个接口可以返回昵称和头像:**
-接口1:https://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1278820830
-接口2:https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1278820830
+**目前有两个接口可以返回昵称和头像:**
+
+- 接口1:https://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1278820830
+- 接口2:https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1278820830
+
 访问以上两个接口需要在浏览器中清空QQ空间cookie
 
 ### 编码问题:
